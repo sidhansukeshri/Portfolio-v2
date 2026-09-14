@@ -211,11 +211,6 @@ const isSmallScreen = window.innerWidth < 640;
 (function initReveal() {
   const elements = document.querySelectorAll('.reveal-fade, .reveal-slide');
 
-  if (prefersReducedMotion) {
-    elements.forEach(el => el.classList.add('visible'));
-    return;
-  }
-
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(entry => {
@@ -225,10 +220,15 @@ const isSmallScreen = window.innerWidth < 640;
         }
       });
     },
-    { rootMargin: '0px 0px -80px 0px', threshold: 0.05 }
+    { rootMargin: '0px', threshold: 0.05 }
   );
 
   elements.forEach(el => observer.observe(el));
+
+  // Fallback: If elements are still hidden after 2 seconds (e.g. observer failed or they didn't scroll), show them
+  setTimeout(() => {
+    elements.forEach(el => el.classList.add('visible'));
+  }, 2000);
 })();
 
 // ════════════════════════════════════════════════════════════
@@ -687,7 +687,6 @@ const isSmallScreen = window.innerWidth < 640;
 (function initStarfield() {
   const canvas = document.getElementById('starfield-canvas');
   if (!canvas) return;
-  if (prefersReducedMotion) return;
 
   const ctx = canvas.getContext('2d');
   let W, H;
