@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sidhansu Keshri — Decision Scientist & Data Builder</title>
+  <meta name="description" content="Decision Scientist at Mu Sigma | SRM CS Graduate (First Distinction, 9.5 CGPA) | Bangalore, India. Engineering data systems, predictive models, and software architectures." />
+  <meta name="author" content="Sidhansu Keshri" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://sidhansukeshri.github.io/Portfolio/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sidhansu Keshri — Decision Scientist & Data Builder" />
+  <meta property="og:description" content="Decision Scientist at Mu Sigma | SRM CS Graduate (First Distinction, 9.5 CGPA) | Bangalore, India." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/sidhansukeshri/Portfolio/refs/heads/main/Certificates/20250628_085034.png" />
+  <meta property="og:url" content="https://sidhansukeshri.github.io/Portfolio/" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sidhansu Keshri — Decision Scientist & Data Builder" />
+  <meta name="twitter:description" content="Decision Scientist at Mu Sigma | SRM CS Graduate (First Distinction, 9.5 CGPA) | Bangalore, India." />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/sidhansukeshri/Portfolio/refs/heads/main/Certificates/20250628_085034.png" />
+
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0f'/%3E%3Ctext x='16' y='23' font-family='Inter,sans-serif' font-size='16' font-weight='700' fill='%237c6af7' text-anchor='middle'%3ESK%3C/text%3E%3C/svg%3E" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome (icons only, defer) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" /></noscript>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Global Starfield Background -->
+  <canvas id="starfield-canvas" aria-hidden="true"></canvas>
+
+
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Custom cursor (desktop only) -->
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true">
+    <span id="cursor-label"></span>
+  </div>
+
+  <!-- ═══════════════ NAVIGATION ═══════════════ -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo" aria-label="Sidhansu Keshri — Home">
+        <span class="logo-mark">SK</span>
+        <span class="logo-name">Sidhansu Keshri</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#work" class="nav-link" data-section="work">Work</a></li>
+        <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+        <li><a href="#credentials" class="nav-link" data-section="credentials">Credentials</a></li>
+        <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+      </ul>
+      <a href="https://drive.google.com/file/d/1prPu3m29_UzqBEoIsDIFliCF_-9teP5-/view?usp=sharing" target="_blank" rel="noopener" class="nav-resume btn-magnetic" aria-label="Download Resume (opens in new tab)">
+        Resume <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+      </a>
+      <button class="nav-mobile-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu overlay -->
+  <div id="mobile-menu" class="mobile-menu" role="dialog" aria-label="Navigation menu" aria-hidden="true">
+    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation menu">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <nav>
+      <ul class="mobile-nav-links" role="list">
+        <li><a href="#work" class="mobile-nav-link" tabindex="-1">Work</a></li>
+        <li><a href="#about" class="mobile-nav-link" tabindex="-1">About</a></li>
+        <li><a href="#credentials" class="mobile-nav-link" tabindex="-1">Credentials</a></li>
+        <li><a href="#contact" class="mobile-nav-link" tabindex="-1">Contact</a></li>
+        <li>
+          <a href="https://drive.google.com/file/d/1prPu3m29_UzqBEoIsDIFliCF_-9teP5-/view?usp=sharing" target="_blank" rel="noopener" class="mobile-nav-link mobile-nav-resume" tabindex="-1">
+            Resume <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="mobile-menu-footer">
+      <span class="mono-label">Bangalore, India · Decision Scientist @ Mu Sigma</span>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section id="hero" aria-label="Introduction">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <div class="hero-status reveal-fade" data-delay="0">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span class="mono-label">Decision Scientist @ Mu Sigma &nbsp;·&nbsp; Bangalore, India</span>
+        </div>
+        <h1 class="hero-headline reveal-fade" data-delay="1">
+          <span class="headline-line">Transforming data</span>
+          <span class="headline-line headline-accent">into intelligence</span>
+          <span class="headline-line">&amp; decisive action.</span>
+        </h1>
+        <p class="hero-sub reveal-fade" data-delay="2">
+          Decision Scientist at <em>Mu Sigma</em> · SRM CS Graduate with First Distinction (9.5 CGPA).<br />
+          I engineer data systems, decision models, and scalable algorithms to solve complex real-world problems.
+        </p>
+        <div class="hero-ctas reveal-fade" data-delay="3">
+          <a href="#work" class="cta-primary btn-magnetic" aria-label="View my work">
+            View Work
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://drive.google.com/file/d/1prPu3m29_UzqBEoIsDIFliCF_-9teP5-/view?usp=sharing" target="_blank" rel="noopener" class="cta-secondary btn-magnetic" aria-label="Download CV (opens in new tab)">
+            Download CV
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v7M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="hero-meta reveal-fade" data-delay="4" aria-hidden="true">
+          <span class="mono-label">SRM IST (9.5 CGPA — First Distinction)</span>
+          <span class="meta-divider">·</span>
+          <span class="mono-label">Computer Science B.Tech</span>
+          <span class="meta-divider">·</span>
+          <span class="mono-label">Mu Sigma Decision Scientist</span>
+          <span class="meta-divider">·</span>
+          <span class="mono-label">Bangalore</span>
+        </div>
+      </div>
+      <a href="#work" class="hero-scroll-hint" aria-label="Scroll to work section">
+        <span class="scroll-label mono-label">Scroll</span>
+        <span class="scroll-arrow" aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <!-- ═══════════════ WORK / PROJECTS ═══════════════ -->
+    <section id="work" aria-label="Selected work">
+      <div class="section-inner">
+        <header class="section-header reveal-fade">
+          <span class="section-label mono-label">Selected Work</span>
+          <h2 class="section-title">Things I've built.</h2>
+          <p class="section-subtitle">Projects across decision intelligence, machine learning, data engineering, algorithms, and systems architecture.</p>
+        </header>
+
+        <div class="projects-grid">
+
+          <!-- MazeCraft — featured -->
+          <article class="project-card project-featured reveal-slide" data-delay="0" aria-label="MazeCraft project">
+            <a href="https://github.com/sidhansukeshri/Maze-Generator-Solver" target="_blank" rel="noopener" class="project-link" aria-label="View MazeCraft on GitHub">
+              <div class="project-visual" aria-hidden="true">
+                <div class="proj-visual-maze">
+                  <canvas class="maze-canvas" width="320" height="200" aria-hidden="true"></canvas>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">01</span>
+                  <span class="project-tag">Algorithm</span>
+                  <span class="project-tag">C</span>
+                </div>
+                <h3 class="project-name">MazeCraft</h3>
+                <p class="project-desc">Maze generator and solver driven by a binary tree algorithm. Explores pathfinding logic from the ground up — no shortcuts, just systematic thinking.</p>
+                <div class="project-cta">
+                  <span>View on GitHub</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- Omni OS — featured -->
+          <article class="project-card project-featured reveal-slide" data-delay="1" aria-label="Omni OS project">
+            <a href="https://github.com/sidhansukeshri/Omni_OS" target="_blank" rel="noopener" class="project-link" aria-label="View Omni OS on GitHub">
+              <div class="project-visual" aria-hidden="true">
+                <div class="proj-visual-os">
+                  <div class="os-window">
+                    <div class="os-titlebar">
+                      <span class="os-dot os-red"></span>
+                      <span class="os-dot os-yellow"></span>
+                      <span class="os-dot os-green"></span>
+                      <span class="os-title-text mono-label">omni@system:~</span>
+                    </div>
+                    <div class="os-body">
+                      <div class="os-line mono-label"><span class="os-prompt">$</span> boot sequence initiated...</div>
+                      <div class="os-line mono-label"><span class="os-prompt">$</span> loading kernel modules</div>
+                      <div class="os-line mono-label os-blink"><span class="os-prompt">$</span> <span class="os-cursor">_</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">02</span>
+                  <span class="project-tag">Systems</span>
+                  <span class="project-tag">C++</span>
+                </div>
+                <h3 class="project-name">Omni OS</h3>
+                <p class="project-desc">A simulated operating system environment. Built to understand process management, memory, and the invisible machinery under every running program.</p>
+                <div class="project-cta">
+                  <span>View on GitHub</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- iSpySpecs — half -->
+          <article class="project-card reveal-slide" data-delay="2" aria-label="iSpySpecs project">
+            <a href="https://github.com/sidhansukeshri/oodp-hackathon-2023" target="_blank" rel="noopener" class="project-link" aria-label="View iSpySpecs on GitHub">
+              <div class="project-visual project-visual-sm" aria-hidden="true">
+                <div class="proj-visual-specs">
+                  <div class="spec-bars">
+                    <div class="spec-bar-row"><span class="mono-label">Camera</span><div class="spec-bar-fill" style="width:90%"></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">Battery</span><div class="spec-bar-fill" style="width:75%"></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">Display</span><div class="spec-bar-fill" style="width:85%"></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">CPU</span><div class="spec-bar-fill" style="width:95%"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">03</span>
+                  <span class="project-tag">Hackathon 2023</span>
+                  <span class="project-tag">OOP</span>
+                </div>
+                <h3 class="project-name">iSpySpecs</h3>
+                <p class="project-desc">Phone specification comparator built during the 2023 OODP Hackathon. Side-by-side data analysis with OOP architecture.</p>
+                <div class="project-cta">
+                  <span>View on GitHub</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- SkySurfer — half -->
+          <article class="project-card reveal-slide" data-delay="3" aria-label="SkySurfer project">
+            <a href="https://github.com/sidhansukeshri/WeatherApp" target="_blank" rel="noopener" class="project-link" aria-label="View SkySurfer on GitHub">
+              <div class="project-visual project-visual-sm" aria-hidden="true">
+                <div class="proj-visual-weather">
+                  <div class="weather-orb"></div>
+                  <div class="weather-rings">
+                    <div class="weather-ring w-ring-1"></div>
+                    <div class="weather-ring w-ring-2"></div>
+                    <div class="weather-ring w-ring-3"></div>
+                  </div>
+                  <div class="weather-data mono-label">24°C · Clear</div>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">04</span>
+                  <span class="project-tag">Web App</span>
+                  <span class="project-tag">API</span>
+                </div>
+                <h3 class="project-name">SkySurfer</h3>
+                <p class="project-desc">Live weather application consuming real atmospheric data. Clean UI over complex data — simplicity as a design constraint.</p>
+                <div class="project-cta">
+                  <span>View on GitHub</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- Novelicious — third -->
+          <article class="project-card project-third reveal-slide" data-delay="4" aria-label="Novelicious project">
+            <a href="https://github.com/sidhansukeshri/Novelicious" target="_blank" rel="noopener" class="project-link" aria-label="View Novelicious on GitHub">
+              <div class="project-visual project-visual-xs" aria-hidden="true">
+                <div class="proj-visual-novel">
+                  <div class="novel-books">
+                    <div class="novel-book nb-1"></div>
+                    <div class="novel-book nb-2"></div>
+                    <div class="novel-book nb-3"></div>
+                    <div class="novel-book nb-4"></div>
+                    <div class="novel-book nb-5"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">05</span>
+                  <span class="project-tag">Full-stack</span>
+                </div>
+                <h3 class="project-name">Novelicious</h3>
+                <p class="project-desc">A literary discovery platform for novel enthusiasts. Curated browsing experience with intelligent categorisation.</p>
+                <div class="project-cta">
+                  <span>GitHub</span>
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- TaskTrance — third -->
+          <article class="project-card project-third reveal-slide" data-delay="5" aria-label="TaskTrance project">
+            <a href="https://github.com/sidhansukeshri/To_do_list" target="_blank" rel="noopener" class="project-link" aria-label="View TaskTrance on GitHub">
+              <div class="project-visual project-visual-xs" aria-hidden="true">
+                <div class="proj-visual-task">
+                  <div class="task-items">
+                    <div class="task-item task-done"><span class="task-check">✓</span><span class="mono-label">Design system</span></div>
+                    <div class="task-item task-done"><span class="task-check">✓</span><span class="mono-label">Build prototype</span></div>
+                    <div class="task-item"><span class="task-check task-empty"></span><span class="mono-label">Ship to prod</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">06</span>
+                  <span class="project-tag">Web App</span>
+                </div>
+                <h3 class="project-name">TaskTrance</h3>
+                <p class="project-desc">Minimal, visually elegant task manager. Smooth interactions as the core design constraint.</p>
+                <div class="project-cta">
+                  <span>GitHub</span>
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- Random Funville — third -->
+          <article class="project-card project-third reveal-slide" data-delay="6" aria-label="Random Funville project">
+            <a href="https://github.com/sidhansukeshri/Random-Funville" target="_blank" rel="noopener" class="project-link" aria-label="View Random Funville on GitHub">
+              <div class="project-visual project-visual-xs" aria-hidden="true">
+                <div class="proj-visual-game">
+                  <div class="game-dice">
+                    <div class="dice-face">
+                      <span class="dice-dot"></span>
+                      <span class="dice-dot"></span>
+                      <span class="dice-dot"></span>
+                      <span class="dice-dot"></span>
+                      <span class="dice-dot"></span>
+                      <span class="dice-dot"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="project-info">
+                <div class="project-meta">
+                  <span class="project-index mono-label">07</span>
+                  <span class="project-tag">Games</span>
+                  <span class="project-tag">JS</span>
+                </div>
+                <h3 class="project-name">Random Funville</h3>
+                <p class="project-desc">Mini-game hub — dice rolling, number guessing, password generation. Proof that small things can still be crafted well.</p>
+                <div class="project-cta">
+                  <span>GitHub</span>
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+        </div>
+
+        <div class="work-footer reveal-fade" data-delay="2">
+          <a href="https://github.com/sidhansukeshri" target="_blank" rel="noopener" class="all-work-link btn-magnetic" aria-label="View all projects on GitHub">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            All projects on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ ABOUT ═══════════════ -->
+    <section id="about" aria-label="About me">
+      <div class="section-inner">
+        <div class="about-layout">
+
+          <div class="about-left reveal-fade">
+            <div class="about-photo-wrap">
+              <img
+                src="https://raw.githubusercontent.com/sidhansukeshri/Portfolio/refs/heads/main/Certificates/20250628_085034.png"
+                alt="Sidhansu Keshri — profile photo"
+                loading="lazy"
+                width="400"
+                height="400"
+                class="about-photo"
+              />
+              <div class="about-photo-glow" aria-hidden="true"></div>
+            </div>
+            <div class="about-quick-info">
+              <div class="quick-info-row">
+                <span class="mono-label">Role</span>
+                <span>Decision Scientist @ Mu Sigma</span>
+              </div>
+              <div class="quick-info-row">
+                <span class="mono-label">Education</span>
+                <span>SRM IST · B.Tech CS (9.5 CGPA, First Distinction)</span>
+              </div>
+              <div class="quick-info-row">
+                <span class="mono-label">Location</span>
+                <span>Bangalore, India</span>
+              </div>
+              <div class="quick-info-row">
+                <span class="mono-label">Past Role</span>
+                <span>Younity.in — Business Development</span>
+              </div>
+              <div class="quick-info-row">
+                <span class="mono-label">Languages</span>
+                <span>Hindi · English · Bengali</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-right">
+            <header class="section-header reveal-fade">
+              <span class="section-label mono-label">About</span>
+              <h2 class="section-title">I turn complex data<br />into strategic clarity.</h2>
+            </header>
+
+            <div class="about-narrative reveal-fade" data-delay="1">
+              <p>I'm Sidhansu — a Decision Scientist at <strong>Mu Sigma</strong> based in <strong>Bangalore</strong>. I specialize in untangling complex data ecosystems, engineering statistical and predictive models, and converting raw information into decisive strategy.</p>
+              <p>I graduated from <strong>SRM Institute of Science and Technology</strong> with <strong>First Distinction</strong> and a <strong>9.5 CGPA</strong> in Computer Science. My academic background spans algorithmic design, high-performance data structures, and computational theory, providing me with an engineering-first lens on data science.</p>
+              <p>Prior to Mu Sigma, I led business development initiatives at <strong>Younity.in</strong>. Combining leadership communication with mathematical modeling allows me to bridge executive decision-making and deep technical implementation.</p>
+            </div>
+
+            <div class="capabilities reveal-fade" data-delay="2">
+              <h3 class="caps-title mono-label">Capabilities</h3>
+              <div class="caps-grid">
+                <div class="cap-group" tabindex="0" aria-label="Decision Science and Machine Learning capability group">
+                  <div class="cap-group-header">
+                    <span class="cap-icon" aria-hidden="true">⬡</span>
+                    <span class="cap-name">Decision Science &amp; ML</span>
+                  </div>
+                  <div class="cap-tech">
+                    <span class="tech-tag">Decision Intelligence</span>
+                    <span class="tech-tag">Machine Learning</span>
+                    <span class="tech-tag">Predictive Analytics</span>
+                    <span class="tech-tag">Statistical Modeling</span>
+                    <span class="tech-tag">A/B Testing</span>
+                  </div>
+                </div>
+                <div class="cap-group" tabindex="0" aria-label="Data Engineering capability group">
+                  <div class="cap-group-header">
+                    <span class="cap-icon" aria-hidden="true">⬡</span>
+                    <span class="cap-name">Data Engineering &amp; Analytics</span>
+                  </div>
+                  <div class="cap-tech">
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">SQL</span>
+                    <span class="tech-tag">Data Pipelines</span>
+                    <span class="tech-tag">ETL Optimization</span>
+                    <span class="tech-tag">Feature Engineering</span>
+                  </div>
+                </div>
+                <div class="cap-group" tabindex="0" aria-label="Systems and Algorithms capability group">
+                  <div class="cap-group-header">
+                    <span class="cap-icon" aria-hidden="true">⬡</span>
+                    <span class="cap-name">Systems &amp; Algorithms</span>
+                  </div>
+                  <div class="cap-tech">
+                    <span class="tech-tag">C</span>
+                    <span class="tech-tag">C++</span>
+                    <span class="tech-tag">Data Structures</span>
+                    <span class="tech-tag">Graph Algorithms</span>
+                    <span class="tech-tag">Pathfinding</span>
+                  </div>
+                </div>
+                <div class="cap-group" tabindex="0" aria-label="Product and Strategy capability group">
+                  <div class="cap-group-header">
+                    <span class="cap-icon" aria-hidden="true">⬡</span>
+                    <span class="cap-name">Product &amp; Strategy</span>
+                  </div>
+                  <div class="cap-tech">
+                    <span class="tech-tag">Full-stack Web</span>
+                    <span class="tech-tag">Business Dev</span>
+                    <span class="tech-tag">Executive Strategy</span>
+                    <span class="tech-tag">API Systems</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="currently-section reveal-fade" data-delay="3">
+              <h3 class="mono-label currently-label">Currently (2026)</h3>
+              <div class="currently-items">
+                <div class="currently-item">
+                  <span class="currently-dot building" aria-hidden="true"></span>
+                  <span class="currently-state mono-label">Building</span>
+                  <span>Enterprise decision frameworks &amp; automated data pipelines at Mu Sigma</span>
+                </div>
+                <div class="currently-item">
+                  <span class="currently-dot learning" aria-hidden="true"></span>
+                  <span class="currently-state mono-label">Learning</span>
+                  <span>Advanced Reinforcement Learning &amp; Deep Neural Architecture</span>
+                </div>
+                <div class="currently-item">
+                  <span class="currently-dot exploring" aria-hidden="true"></span>
+                  <span class="currently-state mono-label">Exploring</span>
+                  <span>LLM-driven analytics agents &amp; real-time streaming architectures</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ CREDENTIALS ═══════════════ -->
+    <section id="credentials" aria-label="Certifications and credentials">
+      <div class="section-inner">
+        <header class="section-header reveal-fade">
+          <span class="section-label mono-label">Credentials</span>
+          <h2 class="section-title">Verified learning.</h2>
+        </header>
+        <div class="creds-strip-wrap">
+          <div class="creds-strip" role="list" aria-label="Certification gallery">
+            <a href="https://raw.githubusercontent.com/sidhansukeshri/Portfolio/main/Certificates/frontend.jpg" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Frontend Development Certificate">
+              <img src="https://raw.githubusercontent.com/sidhansukeshri/Portfolio/main/Certificates/frontend.jpg" alt="Frontend Development Certificate" loading="lazy" />
+              <span class="cred-label mono-label">Frontend Dev</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Python.png?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Python Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Python.png?raw=true" alt="Python Certificate" loading="lazy" />
+              <span class="cred-label mono-label">Python</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/HTML.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="HTML Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/HTML.jpg?raw=true" alt="HTML Certificate" loading="lazy" />
+              <span class="cred-label mono-label">HTML</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Colab.png?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Google Colab Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Colab.png?raw=true" alt="Google Colab Certificate" loading="lazy" />
+              <span class="cred-label mono-label">Collaboration</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/MyCaptain%20Ethical%20Hacking%20workshop%20certificate_page-0001.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Ethical Hacking Workshop Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/MyCaptain%20Ethical%20Hacking%20workshop%20certificate_page-0001.jpg?raw=true" alt="Ethical Hacking Workshop Certificate" loading="lazy" />
+              <span class="cred-label mono-label">Ethical Hacking</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Sidhansu_keshri_scaler_certificate_page-0001.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Scaler Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Sidhansu_keshri_scaler_certificate_page-0001.jpg?raw=true" alt="Scaler Certificate" loading="lazy" />
+              <span class="cred-label mono-label">Scaler</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/SRM_MUN_page-0001.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="SRM MUN Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/SRM_MUN_page-0001.jpg?raw=true" alt="SRM MUN Certificate" loading="lazy" />
+              <span class="cred-label mono-label">SRM MUN</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/certificate%20of%20merit%20for%20semiconductor_page-0001.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Semiconductor Merit Certificate">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/certificate%20of%20merit%20for%20semiconductor_page-0001.jpg?raw=true" alt="Semiconductor Merit Certificate" loading="lazy" />
+              <span class="cred-label mono-label">Semiconductor</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/best%20closer.jpeg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Best Closer Award — Younity.in">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/best%20closer.jpeg?raw=true" alt="Best Closer Award — Younity.in" loading="lazy" />
+              <span class="cred-label mono-label">Best Closer</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Rising%20sales%20star.jpeg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Rising Sales Star Award">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/Rising%20sales%20star.jpeg?raw=true" alt="Rising Sales Star Award" loading="lazy" />
+              <span class="cred-label mono-label">Rising Star</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/best%20decision%20maker.jpeg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Best Decision Maker Award">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/best%20decision%20maker.jpeg?raw=true" alt="Best Decision Maker Award" loading="lazy" />
+              <span class="cred-label mono-label">Best Decision Maker</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/excellent%20communicator.jpeg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Excellent Communicator Award">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/excellent%20communicator.jpeg?raw=true" alt="Excellent Communicator Award" loading="lazy" />
+              <span class="cred-label mono-label">Communicator</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/exceptional%20hire.jpeg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Exceptional Hire Award">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/exceptional%20hire.jpeg?raw=true" alt="Exceptional Hire Award" loading="lazy" />
+              <span class="cred-label mono-label">Exceptional Hire</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/certificate%20of%20completion_page-0001.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Certificate of Completion">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/certificate%20of%20completion_page-0001.jpg?raw=true" alt="Certificate of Completion" loading="lazy" />
+              <span class="cred-label mono-label">Completion</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/certificate%20of%20excellence%20_page-0001.jpg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Certificate of Excellence">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/certificate%20of%20excellence%20_page-0001.jpg?raw=true" alt="Certificate of Excellence" loading="lazy" />
+              <span class="cred-label mono-label">Excellence</span>
+            </a>
+            <a href="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/pro-active%20personnel.jpeg?raw=true" target="_blank" rel="noopener" class="cred-item" role="listitem" aria-label="Pro-Active Personnel Award">
+              <img src="https://github.com/sidhansukeshri/Portfolio/blob/main/Certificates/pro-active%20personnel.jpeg?raw=true" alt="Pro-Active Personnel Award" loading="lazy" />
+              <span class="cred-label mono-label">Pro-Active</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ CONTACT ═══════════════ -->
+    <section id="contact" aria-label="Contact">
+      <div class="section-inner">
+        <div class="contact-layout">
+          <div class="contact-left reveal-fade">
+            <span class="section-label mono-label">Contact</span>
+            <h2 class="contact-headline">Have a data challenge<br />or big vision?</h2>
+            <p class="contact-sub">Whether it's decision intelligence, scalable data engineering, machine learning systems, or high-polish web products — let me know.</p>
+          </div>
+          <div class="contact-right reveal-fade" data-delay="1">
+            <div class="contact-links">
+              <a href="mailto:sidhansukeshri@gmail.com" class="contact-link btn-magnetic" aria-label="Send email to Sidhansu">
+                <span class="contact-link-label mono-label">Email</span>
+                <span class="contact-link-value">sidhansukeshri@gmail.com</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/in/sidhansu-keshri/" target="_blank" rel="noopener" class="contact-link btn-magnetic" aria-label="LinkedIn profile (opens in new tab)">
+                <span class="contact-link-label mono-label">LinkedIn</span>
+                <span class="contact-link-value">sidhansu-keshri</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </a>
+              <a href="https://github.com/sidhansukeshri" target="_blank" rel="noopener" class="contact-link btn-magnetic" aria-label="GitHub profile (opens in new tab)">
+                <span class="contact-link-label mono-label">GitHub</span>
+                <span class="contact-link-value">sidhansukeshri</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </a>
+              <a href="https://www.hackerrank.com/profile/sidhansukeshri" target="_blank" rel="noopener" class="contact-link btn-magnetic" aria-label="HackerRank profile (opens in new tab)">
+                <span class="contact-link-label mono-label">HackerRank</span>
+                <span class="contact-link-value">sidhansukeshri</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </a>
+              <a href="https://drive.google.com/file/d/1prPu3m29_UzqBEoIsDIFliCF_-9teP5-/view?usp=sharing" target="_blank" rel="noopener" class="contact-link contact-link-resume btn-magnetic" aria-label="Download CV (opens in new tab)">
+                <span class="contact-link-label mono-label">Resume</span>
+                <span class="contact-link-value">Download CV</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-name">Sidhansu Keshri</span>
+      <span class="footer-copy mono-label">Built with care. Hosted on GitHub Pages.</span>
+      <a href="#hero" class="footer-back" aria-label="Back to top">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 11V3M3 7l4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to top
+      </a>
+    </div>
+  </footer>
+
+  <!-- ═══════════════ LIGHTBOX ═══════════════ -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close image">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <img id="lightbox-img" class="lightbox-img" src="" alt="Credential" />
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
