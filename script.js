@@ -841,7 +841,6 @@ const isSmallScreen = window.innerWidth < 640;
     const cur = window.scrollY;
     scrollDelta += (cur - lastScrollY); // accumulate between frames
     lastScrollY  = cur;
-    spawnScrollStars(cur - lastScrollY || 0);
   }, { passive: true });
 
   // ── Resize ─────────────────────────────────────────────────
@@ -857,8 +856,8 @@ const isSmallScreen = window.innerWidth < 640;
   }, { passive: true });
 
   // ── Constants ──────────────────────────────────────────────
-  const STAR_COUNT    = 840;   // background twinkling stars
-  const NODE_COUNT    = 120;   // interactive purple constellation nodes
+  const STAR_COUNT    = 1500;  // background twinkling stars
+  const NODE_COUNT    = 60;    // interactive purple constellation nodes
   const MAX_CONN_DIST = 150;   // max px between nodes to draw a line
   const CURSOR_RAD    = 220;   // node cursor-attraction radius (px)
   const PULL_STR      = 0.028; // node pull strength per frame
@@ -868,8 +867,8 @@ const isSmallScreen = window.innerWidth < 640;
   const STAR_CUR_RAD  = 200;   // star cursor-attraction radius (px)
 
   // Shooting-star spawn timing
-  const SHOOT_MIN_MS  = 2200;  // min gap between shooting stars (ms)
-  const SHOOT_MAX_MS  = 5500;  // max gap
+  const SHOOT_MIN_MS  = 600;   // min gap between shooting stars (ms)
+  const SHOOT_MAX_MS  = 2500;  // max gap
   let   nextShootTime = 0;     // timestamp (ts) when next shoot is allowed
 
   // Accent purple in RGB
@@ -926,15 +925,15 @@ const isSmallScreen = window.innerWidth < 640;
       // scrollDelta is consumed here; it decays in the render loop.
       this.y -= scrollDelta * (1 - this.depth) * PARALLAX;
 
-      // ── Cursor soft attraction ──────────────────────────────
+      // ── Cursor soft repulsion ──────────────────────────────
       const dx = mouseX - this.x;
       const dy = mouseY - this.y;
       const d  = Math.sqrt(dx * dx + dy * dy);
       if (d < STAR_CUR_RAD && d > 0) {
         const f = (STAR_CUR_RAD - d) / STAR_CUR_RAD;
-        // Attract toward cursor + inherit a fraction of cursor velocity
-        this.x += (dx * 0.016 + mVelX * 0.04) * f;
-        this.y += (dy * 0.016 + mVelY * 0.04) * f;
+        // Push away from cursor + inherit a fraction of cursor velocity
+        this.x -= (dx * 0.025 - mVelX * 0.04) * f;
+        this.y -= (dy * 0.025 - mVelY * 0.04) * f;
       }
 
       // ── Viewport wrap ───────────────────────────────────────
@@ -996,15 +995,15 @@ const isSmallScreen = window.innerWidth < 640;
       this.x += this.vx;
       this.y += this.vy;
 
-      // ── Strong cursor attraction + velocity drag ─────────────
+      // ── Strong cursor repulsion + velocity drag ─────────────
       const dx = mouseX - this.x;
       const dy = mouseY - this.y;
       const d  = Math.sqrt(dx * dx + dy * dy);
       if (d < CURSOR_RAD && d > 0) {
         const f = (CURSOR_RAD - d) / CURSOR_RAD;
-        // Pull toward cursor; mVel drag makes fast sweeps create ripples
-        this.x += (dx * PULL_STR + mVelX * 0.07) * f;
-        this.y += (dy * PULL_STR + mVelY * 0.07) * f;
+        // Repulse from cursor; mVel drag makes fast sweeps create ripples
+        this.x -= (dx * PULL_STR * 1.5 - mVelX * 0.07) * f;
+        this.y -= (dy * PULL_STR * 1.5 - mVelY * 0.07) * f;
       }
 
       // ── Soft spring back to home position ───────────────────
@@ -1141,26 +1140,7 @@ const isSmallScreen = window.innerWidth < 640;
     shootingStars = [];
   }
 
-  // ── Scroll star spawning ───────────────────────────────────
-  /**
-   * Spawn new stars at the leading viewport edge when scrolling,
-   * so the sky always appears fully populated in new sections.
-   * Stars fade in (fadeIn: 0→1) to avoid a jarring pop.
-   *
-   * @param {number} delta - scroll distance this event (signed, px)
-   */
-  function spawnScrollStars(delta) {
-    if (Math.abs(delta) < 2) return; // ignore micro-scroll jitter
-    const count  = Math.min(Math.ceil(Math.abs(delta) * 0.2), 8);
-    const edgeY  = delta > 0 ? H + 15 : -15; // bottom edge if scrolling down
-    for (let i = 0; i < count; i++) {
-      stars.push(new Star(edgeY + (Math.random() - 0.5) * 40));
-    }
-    // Trim array to avoid unbounded memory growth
-    if (stars.length > STAR_COUNT + 100) {
-      stars.splice(0, stars.length - STAR_COUNT);
-    }
-  }
+
 
   // ── Draw constellation connections ─────────────────────────
   /** O(n²) pair check — draw fading lines between nearby nodes. */
