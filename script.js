@@ -888,3 +888,32 @@ const isSmallScreen = window.innerWidth < 640;
     if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
   });
 })();
+
+// ════════════════════════════════════════════════════════════
+// 14. MOBILE TOUCH RIPPLE — sexy tap effect for touch screens
+// ════════════════════════════════════════════════════════════
+(function initTouchRipples() {
+  if (!isTouchDevice) return;
+
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) return; // ignore multi-touch
+    
+    const touch = e.touches[0];
+    const ripple = document.createElement('div');
+    ripple.className = 'touch-ripple';
+    
+    // Position ripple exactly at touch point
+    ripple.style.left = `${touch.clientX}px`;
+    ripple.style.top = `${touch.clientY}px`;
+    
+    document.body.appendChild(ripple);
+    
+    // Animate and remove
+    requestAnimationFrame(() => {
+      ripple.classList.add('active');
+      setTimeout(() => {
+        ripple.remove();
+      }, 800); // matches CSS animation duration
+    });
+  }, { passive: true });
+})();
