@@ -966,3 +966,40 @@ const isSmallScreen = window.innerWidth < 640;
     });
   }, { passive: true });
 })();
+
+// ════════════════════════════════════════════════════════════
+// 15. RANDOM FUNVILLE — DYNAMIC DICE ROLL & FEATURE TICKER
+// ════════════════════════════════════════════════════════════
+(function initRandomFunvilleVisual() {
+  const diceEl = document.getElementById('game-dice');
+  const diceNum = document.getElementById('dice-num');
+  const dicePips = document.getElementById('dice-pips');
+  const tickerBadges = document.querySelectorAll('#game-ticker .ticker-badge');
+
+  if (!diceEl || (!diceNum && !dicePips)) return;
+
+  const diceFaces = [1, 4, 6, 2, 5, 3];
+  let faceIdx = 0;
+  let badgeIdx = 0;
+
+  setInterval(() => {
+    // 1. Roll dice & change number
+    faceIdx = (faceIdx + 1) % diceFaces.length;
+    const currentVal = diceFaces[faceIdx];
+
+    diceEl.classList.add('rolling');
+    setTimeout(() => {
+      if (diceNum) diceNum.textContent = currentVal;
+      if (dicePips) dicePips.setAttribute('data-face', currentVal);
+      diceEl.classList.remove('rolling');
+    }, 250);
+
+    // 2. Cycle mini-game feature badges (Dice Roller -> Number Guesser -> Password Gen)
+    if (tickerBadges.length > 0) {
+      tickerBadges.forEach(b => b.classList.remove('active'));
+      badgeIdx = (badgeIdx + 1) % tickerBadges.length;
+      tickerBadges[badgeIdx].classList.add('active');
+    }
+  }, 2200);
+})();
+

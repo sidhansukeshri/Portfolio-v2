@@ -262,10 +262,10 @@
               <div class="project-visual project-visual-sm" aria-hidden="true">
                 <div class="proj-visual-specs">
                   <div class="spec-bars">
-                    <div class="spec-bar-row"><span class="mono-label">Camera</span><div class="spec-bar-fill" style="--bar-w:90%"></div></div>
-                    <div class="spec-bar-row"><span class="mono-label">Battery</span><div class="spec-bar-fill" style="--bar-w:75%"></div></div>
-                    <div class="spec-bar-row"><span class="mono-label">Display</span><div class="spec-bar-fill" style="--bar-w:85%"></div></div>
-                    <div class="spec-bar-row"><span class="mono-label">CPU</span><div class="spec-bar-fill" style="--bar-w:95%"></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">Camera</span><div class="spec-bar-track"><div class="spec-bar-fill" style="--bar-w:90%"></div></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">Battery</span><div class="spec-bar-track"><div class="spec-bar-fill" style="--bar-w:75%"></div></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">Display</span><div class="spec-bar-track"><div class="spec-bar-fill" style="--bar-w:85%"></div></div></div>
+                    <div class="spec-bar-row"><span class="mono-label">CPU</span><div class="spec-bar-track"><div class="spec-bar-fill" style="--bar-w:95%"></div></div></div>
                   </div>
                 </div>
               </div>
@@ -320,13 +320,45 @@
             <a href="https://github.com/sidhansukeshri/Novelicious" target="_blank" rel="noopener" class="project-link" aria-label="View Novelicious on GitHub">
               <div class="project-visual project-visual-xs" aria-hidden="true">
                 <div class="proj-visual-novel">
-                  <div class="novel-books">
-                    <div class="novel-book nb-1"></div>
-                    <div class="novel-book nb-2"></div>
-                    <div class="novel-book nb-3"></div>
-                    <div class="novel-book nb-4"></div>
-                    <div class="novel-book nb-5"></div>
+                  <div class="novel-bookshelf">
+                    <div class="novel-book nb-1">
+                      <div class="book-spine">
+                        <span class="spine-line"></span>
+                        <span class="spine-text">FICTION</span>
+                        <span class="spine-line"></span>
+                      </div>
+                    </div>
+                    <div class="novel-book nb-2">
+                      <div class="book-spine">
+                        <span class="spine-line"></span>
+                        <span class="spine-text">SCI-FI</span>
+                        <span class="spine-line"></span>
+                      </div>
+                    </div>
+                    <div class="novel-book nb-3 nb-featured">
+                      <div class="book-spine">
+                        <span class="spine-line gold"></span>
+                        <span class="spine-text gold-text">NOVEL</span>
+                        <span class="spine-line gold"></span>
+                      </div>
+                      <div class="book-ribbon"></div>
+                    </div>
+                    <div class="novel-book nb-4">
+                      <div class="book-spine">
+                        <span class="spine-line"></span>
+                        <span class="spine-text">MYSTERY</span>
+                        <span class="spine-line"></span>
+                      </div>
+                    </div>
+                    <div class="novel-book nb-5">
+                      <div class="book-spine">
+                        <span class="spine-line"></span>
+                        <span class="spine-text">LIT</span>
+                        <span class="spine-line"></span>
+                      </div>
+                    </div>
                   </div>
+                  <div class="bookshelf-shelf"></div>
                 </div>
               </div>
               <div class="project-info">
@@ -376,14 +408,23 @@
             <a href="https://github.com/sidhansukeshri/Random-Funville" target="_blank" rel="noopener" class="project-link" aria-label="View Random Funville on GitHub">
               <div class="project-visual project-visual-xs" aria-hidden="true">
                 <div class="proj-visual-game">
-                  <div class="game-dice">
-                    <div class="dice-face">
-                      <span class="dice-dot"></span>
-                      <span class="dice-dot"></span>
-                      <span class="dice-dot"></span>
-                      <span class="dice-dot"></span>
-                      <span class="dice-dot"></span>
-                      <span class="dice-dot"></span>
+                  <div class="game-hud">
+                    <div class="game-dice" id="game-dice">
+                      <div class="dice-body">
+                        <span class="dice-num" id="dice-num">5</span>
+                        <div class="dice-pips" id="dice-pips" data-face="5">
+                          <span class="pip p-tl"></span>
+                          <span class="pip p-tr"></span>
+                          <span class="pip p-c"></span>
+                          <span class="pip p-bl"></span>
+                          <span class="pip p-br"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="game-ticker" id="game-ticker">
+                      <div class="ticker-badge active">🎲 Dice Roller</div>
+                      <div class="ticker-badge">🔢 Number Guesser</div>
+                      <div class="ticker-badge">🔑 Password Gen</div>
                     </div>
                   </div>
                 </div>
