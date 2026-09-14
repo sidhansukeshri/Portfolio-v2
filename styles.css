@@ -516,8 +516,7 @@ section {
   min-height: 100dvh;
   background:
     radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,106,247,0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,106,247,0.05) 0%, transparent 50%),
-    var(--bg);
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,106,247,0.05) 0%, transparent 50%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -905,7 +904,7 @@ section {
    WORK / PROJECTS
    ═══════════════════════════════════════════════════════════ */
 #work {
-  background: var(--bg);
+  background: transparent;
 }
 
 .projects-grid {
@@ -1616,7 +1615,7 @@ section {
    ABOUT
    ═══════════════════════════════════════════════════════════ */
 #about {
-  background: var(--bg-elevated);
+  background: rgba(15, 15, 24, 0.55);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -1875,7 +1874,7 @@ section {
    CREDENTIALS
    ═══════════════════════════════════════════════════════════ */
 #credentials {
-  background: var(--bg);
+  background: transparent;
 }
 
 .creds-slider-wrap {
@@ -2008,7 +2007,7 @@ section {
    CONTACT
    ═══════════════════════════════════════════════════════════ */
 #contact {
-  background: var(--bg-elevated);
+  background: rgba(15, 15, 24, 0.55);
   border-top: 1px solid var(--border);
 }
 

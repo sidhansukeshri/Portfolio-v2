@@ -232,13 +232,12 @@ const isSmallScreen = window.innerWidth < 640;
 })();
 
 // ════════════════════════════════════════════════════════════
-// 7. HERO CANVAS — Interactive Neural Constellation
+// 7. HERO CANVAS — Dense Interactive Star Cloud + Neural Constellation
 // ════════════════════════════════════════════════════════════
 (function initHeroCanvas() {
   const canvas = document.getElementById('hero-canvas');
   if (!canvas) return;
 
-  // Disable expensive canvas on mobile for performance
   if (isSmallScreen) {
     canvas.style.display = 'none';
     return;
@@ -249,61 +248,129 @@ const isSmallScreen = window.innerWidth < 640;
   let animId = null;
   let isVisible = true;
 
-  // Mouse position
+  // Mouse/cursor state
   let mx = -9999, my = -9999;
+  let prevMx = -9999, prevMy = -9999;
+  let cursorVelX = 0, cursorVelY = 0;
 
-  // Node configuration
-  const NODE_COUNT    = 55;
-  const MAX_DIST      = 140;
-  const CURSOR_RADIUS = 160;
-  const CURSOR_PULL   = 0.018;
+  // ── Configuration ──────────────────────────────────────────
+  const NODE_COUNT      = 300;   // interactive constellation nodes
+  const STAR_COUNT      = 840;   // pure background twinkling stars
+  const MAX_DIST        = 160;   // connection draw distance
+  const CURSOR_RADIUS   = 220;   // attraction radius
+  const CURSOR_PULL     = 0.032; // pull strength
+  const REPULSE_RADIUS  = 90;    // click-burst repulsion radius
+  const REPULSE_FORCE   = 6;     // click-burst strength
 
-  // Accent color in RGB
+  // Accent colors
   const ACCENT_R = 124, ACCENT_G = 106, ACCENT_B = 247;
 
-  // Node class
+  // ── Background twinkling stars ─────────────────────────────
+  class Star {
+    constructor() { this.init(); }
+    init() {
+      this.x     = Math.random() * W;
+      this.y     = Math.random() * H;
+      this.r     = Math.random() * 1.2 + 0.2;
+      this.base  = Math.random() * 0.6 + 0.1;
+      this.alpha = this.base;
+      this.phase = Math.random() * Math.PI * 2;
+      this.speed = Math.random() * 0.022 + 0.005;
+      this.hue   = Math.random() < 0.2 ? 220 : 260; // some warm-blue tint
+    }
+    update() {
+      this.phase += this.speed;
+      this.alpha  = this.base + Math.sin(this.phase) * 0.35;
+      this.alpha  = Math.max(0.02, Math.min(1, this.alpha));
+
+      // Very subtle cursor attraction for background stars too
+      const dx = mx - this.x;
+      const dy = my - this.y;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < 180 && d > 0) {
+        const f = (180 - d) / 180;
+        this.x += dx * 0.004 * f;
+        this.y += dy * 0.004 * f;
+      }
+    }
+    draw() {
+      // Glow halo for larger stars
+      if (this.r > 0.9) {
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 4);
+        g.addColorStop(0, `hsla(${this.hue},90%,85%,${this.alpha * 0.35})`);
+        g.addColorStop(1, `hsla(${this.hue},90%,85%,0)`);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r * 4, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+      // Core
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue},90%,92%,${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  // ── Interactive constellation nodes ────────────────────────
   class Node {
     constructor() { this.reset(); }
-
     reset() {
-      this.x  = Math.random() * W;
-      this.y  = Math.random() * H;
-      this.ox = this.x; // original x
-      this.oy = this.y; // original y
-      this.vx = (Math.random() - 0.5) * 0.3;
-      this.vy = (Math.random() - 0.5) * 0.3;
-      this.r  = Math.random() * 1.5 + 0.5;
-      this.opacity = Math.random() * 0.5 + 0.3;
+      this.x   = Math.random() * W;
+      this.y   = Math.random() * H;
+      this.ox  = this.x;
+      this.oy  = this.y;
+      this.vx  = (Math.random() - 0.5) * 0.35;
+      this.vy  = (Math.random() - 0.5) * 0.35;
+      this.r   = Math.random() * 1.8 + 0.6;
+      this.opacity = Math.random() * 0.55 + 0.3;
+      this.twPhase = Math.random() * Math.PI * 2;
+      this.twSpeed = Math.random() * 0.025 + 0.005;
     }
 
     update() {
-      // Gentle drift
+      // Twinkle opacity
+      this.twPhase  += this.twSpeed;
+      this.opacity   = 0.3 + Math.sin(this.twPhase) * 0.25 + 0.15;
+
+      // Drift
       this.x += this.vx;
       this.y += this.vy;
 
       // Cursor gravity
-      const dx  = mx - this.x;
-      const dy  = my - this.y;
+      const dx   = mx - this.x;
+      const dy   = my - this.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
-
       if (dist < CURSOR_RADIUS && dist > 0) {
         const force = (CURSOR_RADIUS - dist) / CURSOR_RADIUS;
-        this.x += dx * CURSOR_PULL * force;
-        this.y += dy * CURSOR_PULL * force;
+        // Also add cursor velocity "dragging" effect
+        this.x += (dx * CURSOR_PULL + cursorVelX * 0.06) * force;
+        this.y += (dy * CURSOR_PULL + cursorVelY * 0.06) * force;
       }
 
-      // Soft return to origin
-      this.x += (this.ox - this.x) * 0.003;
-      this.y += (this.oy - this.y) * 0.003;
+      // Soft spring back
+      this.x += (this.ox - this.x) * 0.004;
+      this.y += (this.oy - this.y) * 0.004;
 
       // Boundary wrap
-      if (this.x < -20) { this.x = W + 20; this.ox = this.x; }
-      if (this.x > W + 20) { this.x = -20; this.ox = this.x; }
-      if (this.y < -20) { this.y = H + 20; this.oy = this.y; }
-      if (this.y > H + 20) { this.y = -20; this.oy = this.y; }
+      if (this.x < -20)    { this.x = W + 20; this.ox = this.x; }
+      if (this.x > W + 20) { this.x = -20;    this.ox = this.x; }
+      if (this.y < -20)    { this.y = H + 20; this.oy = this.y; }
+      if (this.y > H + 20) { this.y = -20;    this.oy = this.y; }
     }
 
     draw() {
+      // Glow halo
+      if (this.r > 1.2) {
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 5);
+        g.addColorStop(0, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},${this.opacity * 0.4})`);
+        g.addColorStop(1, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r * 5, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+      // Core dot
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},${this.opacity})`;
@@ -311,12 +378,14 @@ const isSmallScreen = window.innerWidth < 640;
     }
   }
 
+  let stars = [];
   let nodes = [];
 
   function resize() {
     W = canvas.width  = canvas.offsetWidth;
     H = canvas.height = canvas.offsetHeight;
-    nodes = Array.from({ length: NODE_COUNT }, () => new Node());
+    stars = Array.from({ length: STAR_COUNT }, () => new Star());
+    nodes = Array.from({ length: NODE_COUNT  }, () => new Node());
   }
 
   function drawConnections() {
@@ -329,12 +398,12 @@ const isSmallScreen = window.innerWidth < 640;
         const d  = Math.sqrt(dx * dx + dy * dy);
 
         if (d < MAX_DIST) {
-          const alpha = (1 - d / MAX_DIST) * 0.18;
+          const alpha = (1 - d / MAX_DIST) * 0.22;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
           ctx.strokeStyle = `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},${alpha})`;
-          ctx.lineWidth   = 0.8;
+          ctx.lineWidth   = 0.7;
           ctx.stroke();
         }
       }
@@ -343,15 +412,23 @@ const isSmallScreen = window.innerWidth < 640;
 
   function drawCursorGlow() {
     if (mx < 0 || my < 0) return;
-    const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 200);
-    grad.addColorStop(0,   `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0.04)`);
-    grad.addColorStop(1,   `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
-    ctx.fillStyle = grad;
+    // Inner bright glow
+    const g1 = ctx.createRadialGradient(mx, my, 0, mx, my, 120);
+    g1.addColorStop(0, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0.10)`);
+    g1.addColorStop(1, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, W, H);
+
+    // Outer soft halo
+    const g2 = ctx.createRadialGradient(mx, my, 0, mx, my, 320);
+    g2.addColorStop(0, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0.04)`);
+    g2.addColorStop(1, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
+    ctx.fillStyle = g2;
     ctx.fillRect(0, 0, W, H);
   }
 
   let lastTime = 0;
-  const TARGET_FPS = 40;
+  const TARGET_FPS = 50;
   const FRAME_MS   = 1000 / TARGET_FPS;
 
   function render(timestamp) {
@@ -362,9 +439,22 @@ const isSmallScreen = window.innerWidth < 640;
     lastTime = timestamp - (elapsed % FRAME_MS);
 
     ctx.clearRect(0, 0, W, H);
+
+    // Update cursor velocity
+    cursorVelX = mx - prevMx;
+    cursorVelY = my - prevMy;
+    prevMx = mx;
+    prevMy = my;
+
     drawCursorGlow();
+
+    // Draw background stars first (underneath everything)
+    stars.forEach(s => { s.update(); s.draw(); });
+
+    // Draw constellation nodes + connections on top
     nodes.forEach(n => { n.update(); n.draw(); });
     drawConnections();
+
     animId = requestAnimationFrame(render);
   }
 
@@ -376,6 +466,26 @@ const isSmallScreen = window.innerWidth < 640;
   }, { passive: true });
 
   document.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
+
+  // Click burst — repulse nearby nodes outward
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    nodes.forEach(n => {
+      const dx = n.x - cx;
+      const dy = n.y - cy;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < REPULSE_RADIUS && d > 0) {
+        const force = (REPULSE_RADIUS - d) / REPULSE_RADIUS;
+        n.vx += (dx / d) * REPULSE_FORCE * force;
+        n.vy += (dy / d) * REPULSE_FORCE * force;
+        // Clamp velocity so nodes don't fly off screen
+        const spd = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+        if (spd > 8) { n.vx = (n.vx / spd) * 8; n.vy = (n.vy / spd) * 8; }
+      }
+    });
+  });
 
   // Pause when tab hidden
   document.addEventListener('visibilitychange', () => {
@@ -682,156 +792,491 @@ const isSmallScreen = window.innerWidth < 640;
 })();
 
 // ════════════════════════════════════════════════════════════
-// 12. GLOBAL STARFIELD — twinkling, cursor-reactive, scroll-velocity streaks
+// 12. GLOBAL STARFIELD — Full-page dense interactive star cloud
+//
+//  Visual layers (back → front):
+//    1. Cursor glow         — dual-ring radial purple halo around mouse
+//    2. Shooting stars      — autonomous diagonal streaks, random interval
+//    3. Background stars    — 840 twinkling dots with parallax depth
+//    4. Constellation nodes — 120 purple nodes pulled by cursor
+//    5. Connection lines    — fade by distance between nearby nodes
+//
+//  Scroll behaviour:
+//    - Stars have a `depth` value (0.3–1.0). On scroll, each star shifts
+//      by scrollDelta × (1 − depth) × PARALLAX, creating a subtle multi-
+//      layer parallax rather than jarring velocity streaks.
+//    - New stars spawn (with fade-in) at the leading viewport edge every
+//      scroll event — so the sky stays fully populated as you scroll.
+//
+//  Cursor behaviour:
+//    - Stars softly attract toward cursor within 200px.
+//    - Nodes strongly attract within 220px; they also inherit cursor drag
+//      velocity so fast sweeps leave a visible ripple.
+//    - Click anywhere → nearby nodes burst outward.
 // ════════════════════════════════════════════════════════════
 (function initStarfield() {
   const canvas = document.getElementById('starfield-canvas');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
-  let W, H;
+  let W, H; // canvas dimensions, updated on resize
 
-  // Mouse tracking
-  let mouseX = -9999, mouseY = -9999;
+  // ── Pointer / cursor tracking ──────────────────────────────
+  let mouseX = -9999, mouseY = -9999; // current cursor position (viewport px)
+  let prevMX = -9999, prevMY = -9999; // previous frame cursor position
+  let mVelX  = 0,     mVelY  = 0;    // cursor velocity (for drag effect)
+
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
   }, { passive: true });
   document.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
 
-  // Scroll velocity tracking
+  // ── Scroll tracking ────────────────────────────────────────
+  // scrollDelta: pixels scrolled since last frame — decays each frame
   let lastScrollY = window.scrollY;
-  let scrollVelY  = 0;
+  let scrollDelta = 0; // signed scroll amount applied per-frame for parallax
+
   window.addEventListener('scroll', () => {
     const cur = window.scrollY;
-    scrollVelY = (cur - lastScrollY) * 0.6;
-    lastScrollY = cur;
+    scrollDelta += (cur - lastScrollY); // accumulate between frames
+    lastScrollY  = cur;
+    spawnScrollStars(cur - lastScrollY || 0);
   }, { passive: true });
 
+  // ── Resize ─────────────────────────────────────────────────
   function resize() {
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
+    initParticles(); // reinitialize all particles on resize
   }
-  resize();
   let resizeTO;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTO);
     resizeTO = setTimeout(resize, 200);
   }, { passive: true });
 
-  // ── Star class ─────────────────────────────────────────────
-  const STAR_COUNT = 260;
+  // ── Constants ──────────────────────────────────────────────
+  const STAR_COUNT    = 840;   // background twinkling stars
+  const NODE_COUNT    = 120;   // interactive purple constellation nodes
+  const MAX_CONN_DIST = 150;   // max px between nodes to draw a line
+  const CURSOR_RAD    = 220;   // node cursor-attraction radius (px)
+  const PULL_STR      = 0.028; // node pull strength per frame
+  const REP_RAD       = 100;   // click-burst repulsion radius (px)
+  const REP_FORCE     = 5;     // click-burst impulse magnitude
+  const PARALLAX      = 0.14;  // scroll parallax factor — lower = subtler shift
+  const STAR_CUR_RAD  = 200;   // star cursor-attraction radius (px)
 
+  // Shooting-star spawn timing
+  const SHOOT_MIN_MS  = 2200;  // min gap between shooting stars (ms)
+  const SHOOT_MAX_MS  = 5500;  // max gap
+  let   nextShootTime = 0;     // timestamp (ts) when next shoot is allowed
+
+  // Accent purple in RGB
+  const ACCENT_R = 124, ACCENT_G = 106, ACCENT_B = 247;
+
+  // ══════════════════════════════════════════════════════════
+  // CLASS: Star — background twinkling star
+  //
+  //  Each star has a `depth` (0.3–0.95) used for parallax scroll.
+  //  Depth ≈ 1  → foreground, scrolls faster (slightly)
+  //  Depth ≈ 0.3 → deep background, barely shifts on scroll
+  //
+  //  `fadeIn` goes 0→1 over ~40 frames, used for stars that
+  //  spawn mid-scroll so they don't pop in abruptly.
+  // ══════════════════════════════════════════════════════════
   class Star {
-    constructor() { this.init(true); }
+    /**
+     * @param {number|undefined} spawnY - if set, place star at this Y
+     *   (used when spawning at viewport edges during scroll)
+     */
+    constructor(spawnY) { this.init(spawnY); }
 
-    init(randomY) {
-      this.x  = Math.random() * W;
-      this.y  = randomY ? Math.random() * H : Math.random() * H;
-      this.ox = this.x;
-      this.oy = this.y;
-      this.r  = Math.random() * 1.5 + 0.3;           // radius 0.3–1.8
-      this.baseAlpha = Math.random() * 0.55 + 0.15;  // 0.15–0.7
-      this.alpha = this.baseAlpha;
-      this.twinkleSpeed = Math.random() * 0.018 + 0.004;
-      this.twinklePhase = Math.random() * Math.PI * 2;
-      this.vx = (Math.random() - 0.5) * 0.07;
-      this.vy = (Math.random() - 0.5) * 0.07;
-      this.starVelY = 0;  // per-star scroll streak velocity
+    init(spawnY) {
+      this.x     = Math.random() * W;
+      this.y     = spawnY !== undefined ? spawnY : Math.random() * H;
+      this.depth = Math.random() * 0.65 + 0.3; // parallax depth layer
+      this.r     = Math.random() * 1.6 + 0.25;
+      this.base  = Math.random() * 0.6 + 0.1;  // base opacity
+      this.alpha = this.base;
+      this.twSpeed = Math.random() * 0.02  + 0.004; // twinkle oscillation speed
+      this.twPhase = Math.random() * Math.PI * 2;
+      this.vx    = (Math.random() - 0.5) * 0.06; // slow random drift
+      this.vy    = (Math.random() - 0.5) * 0.06;
+      this.hue   = Math.random() < 0.25 ? 220 : 260; // warm-blue or purple tint
+      // Stars spawned at scroll edges fade in so they don't pop
+      this.fadeIn = spawnY !== undefined ? 0 : 1;
     }
 
     update() {
-      // Twinkle
-      this.twinklePhase += this.twinkleSpeed;
-      this.alpha = this.baseAlpha + Math.sin(this.twinklePhase) * 0.28;
+      // ── Fade in (scroll-spawned stars only) ────────────────
+      if (this.fadeIn < 1) this.fadeIn = Math.min(1, this.fadeIn + 0.03);
+
+      // ── Twinkle: sinusoidal opacity oscillation ─────────────
+      this.twPhase += this.twSpeed;
+      this.alpha = (this.base + Math.sin(this.twPhase) * 0.32) * this.fadeIn;
       this.alpha = Math.max(0.02, Math.min(1, this.alpha));
 
-      // Gentle drift
+      // ── Gentle random drift ─────────────────────────────────
       this.x += this.vx;
       this.y += this.vy;
 
-      // Cursor attraction — stars within 150px softly pull toward cursor
-      const dx   = mouseX - this.x;
-      const dy   = mouseY - this.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 150 && dist > 0) {
-        const force = (150 - dist) / 150;
-        this.x += dx * 0.014 * force;
-        this.y += dy * 0.014 * force;
+      // ── Parallax scroll shift ───────────────────────────────
+      // Deeper stars move less per scroll pixel → layered depth feel.
+      // scrollDelta is consumed here; it decays in the render loop.
+      this.y -= scrollDelta * (1 - this.depth) * PARALLAX;
+
+      // ── Cursor soft attraction ──────────────────────────────
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < STAR_CUR_RAD && d > 0) {
+        const f = (STAR_CUR_RAD - d) / STAR_CUR_RAD;
+        // Attract toward cursor + inherit a fraction of cursor velocity
+        this.x += (dx * 0.016 + mVelX * 0.04) * f;
+        this.y += (dy * 0.016 + mVelY * 0.04) * f;
       }
 
-      // Soft spring back toward home
-      this.x += (this.ox - this.x) * 0.004;
-      this.y += (this.oy - this.y) * 0.004;
-
-      // Scroll streak — each star lerps toward scroll velocity
-      // Bigger stars react slightly more (heavier feel, like parallax depth)
-      const reactivity = 0.4 + (this.r / 1.8) * 0.6;
-      this.starVelY += (scrollVelY * reactivity - this.starVelY) * 0.2;
-      this.y += this.starVelY;
-
-      // Wrap edges
-      if (this.x < -8)  { this.x = W + 8; this.ox = this.x; }
-      if (this.x > W+8) { this.x = -8;    this.ox = this.x; }
-      if (this.y < -8)  { this.y = H + 8; this.oy = this.y; }
-      if (this.y > H+8) { this.y = -8;    this.oy = this.y; }
+      // ── Viewport wrap ───────────────────────────────────────
+      if (this.x < -8)   this.x = W + 8;
+      if (this.x > W + 8) this.x = -8;
+      if (this.y < -20)  this.y = H + 20;
+      if (this.y > H + 20) this.y = -20;
     }
 
     draw() {
-      const velAbs = Math.abs(this.starVelY);
-
-      if (velAbs > 1.2) {
-        // ── Shooting-star streak ──
-        const len = Math.min(velAbs * 2.5, 35);
-        const dir = this.starVelY > 0 ? 1 : -1;
-        const g   = ctx.createLinearGradient(this.x, this.y, this.x, this.y + dir * len);
-        g.addColorStop(0, `rgba(255,255,255,${Math.min(this.alpha + 0.2, 1)})`);
-        g.addColorStop(1, 'rgba(255,255,255,0)');
+      // Soft radial glow halo for larger stars
+      if (this.r > 1.0) {
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 3.5);
+        g.addColorStop(0, `hsla(${this.hue},80%,80%,${this.alpha * 0.18})`);
+        g.addColorStop(1, `hsla(${this.hue},80%,80%,0)`);
         ctx.beginPath();
-        ctx.strokeStyle = g;
-        ctx.lineWidth   = this.r * 1.1;
-        ctx.lineCap     = 'round';
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x, this.y + dir * len);
-        ctx.stroke();
-      } else {
-        // ── Normal twinkling star ──
-        // Optional glow halo for larger stars
-        if (this.r > 1.0) {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.r * 3, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(180,170,255,${this.alpha * 0.12})`;
-          ctx.fill();
-        }
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(240,238,255,${this.alpha})`;
+        ctx.arc(this.x, this.y, this.r * 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = g;
         ctx.fill();
+      }
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue},80%,93%,${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // CLASS: Node — interactive purple constellation node
+  //
+  //  Nodes exist in viewport space and spring back to their
+  //  home (ox, oy) with a soft stiffness. They react strongly
+  //  to cursor attraction and click-burst repulsion.
+  //  Connection lines are drawn between nearby node pairs.
+  // ══════════════════════════════════════════════════════════
+  class Node {
+    constructor() { this.reset(); }
+
+    reset() {
+      this.x   = Math.random() * W;
+      this.y   = Math.random() * H;
+      this.ox  = this.x; // home X — node springs back here
+      this.oy  = this.y; // home Y
+      this.vx  = (Math.random() - 0.5) * 0.3;
+      this.vy  = (Math.random() - 0.5) * 0.3;
+      this.r   = Math.random() * 1.8 + 0.6;
+      this.twPhase = Math.random() * Math.PI * 2;
+      this.twSpeed = Math.random() * 0.022 + 0.005;
+      this.opacity = 0.4;
+    }
+
+    update() {
+      // ── Twinkle ─────────────────────────────────────────────
+      this.twPhase += this.twSpeed;
+      this.opacity  = 0.3 + Math.sin(this.twPhase) * 0.25 + 0.15;
+
+      // ── Drift ───────────────────────────────────────────────
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // ── Strong cursor attraction + velocity drag ─────────────
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < CURSOR_RAD && d > 0) {
+        const f = (CURSOR_RAD - d) / CURSOR_RAD;
+        // Pull toward cursor; mVel drag makes fast sweeps create ripples
+        this.x += (dx * PULL_STR + mVelX * 0.07) * f;
+        this.y += (dy * PULL_STR + mVelY * 0.07) * f;
+      }
+
+      // ── Soft spring back to home position ───────────────────
+      this.x += (this.ox - this.x) * 0.004;
+      this.y += (this.oy - this.y) * 0.004;
+
+      // ── Boundary wrap (update home to avoid abrupt snapping) ─
+      if (this.x < -20)    { this.x = W + 20; this.ox = this.x; }
+      if (this.x > W + 20) { this.x = -20;    this.ox = this.x; }
+      if (this.y < -20)    { this.y = H + 20; this.oy = this.y; }
+      if (this.y > H + 20) { this.y = -20;    this.oy = this.y; }
+    }
+
+    draw() {
+      // Soft radial glow halo for larger nodes
+      if (this.r > 1.2) {
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 5);
+        g.addColorStop(0, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},${this.opacity * 0.45})`);
+        g.addColorStop(1, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r * 5, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+      // Core node dot
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},${this.opacity})`;
+      ctx.fill();
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // CLASS: ShootingStar — autonomous diagonal streak
+  //
+  //  Spawns randomly from the top or right edge, flies at a
+  //  diagonal angle, then fades out. Completely independent of
+  //  scroll and cursor — triggers every 2–5 seconds at random.
+  //
+  //  The gradient tail (transparent → bright head) gives the
+  //  classic comet look. A subtle radial glow at the head adds
+  //  depth without being garish.
+  // ══════════════════════════════════════════════════════════
+  class ShootingStar {
+    constructor() { this.spawn(); }
+
+    spawn() {
+      // ── Entry point ─────────────────────────────────────────
+      // 70% enter from top edge (y = -20), 30% from right edge
+      const fromTop = Math.random() > 0.3;
+      const speed   = Math.random() * 4.5 + 3.5; // 3.5–8 px/frame
+      const angle   = (20 + Math.random() * 40) * Math.PI / 180; // 20–60° below horiz
+
+      if (fromTop) {
+        this.x  = Math.random() * W * 1.3; // allow right portion of top edge
+        this.y  = -15;
+        this.vx = -Math.cos(angle) * speed; // leftward
+        this.vy =  Math.sin(angle) * speed; // downward
+      } else {
+        this.x  = W + 15;
+        this.y  = Math.random() * H * 0.5; // upper half of right edge
+        this.vx = -speed;                  // leftward
+        this.vy =  Math.sin(angle) * speed * 0.6;
+      }
+
+      this.speed    = speed;
+      this.trailLen = Math.random() * 110 + 55; // 55–165 px tail
+      this.r        = Math.random() * 0.8 + 0.35;
+      this.maxAlpha = Math.random() * 0.5 + 0.3;
+      this.alpha    = 0; // fade in from 0
+      this.done     = false;
+    }
+
+    update() {
+      // Fade in quickly at start
+      this.alpha = Math.min(this.alpha + 0.07, this.maxAlpha);
+
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Fade out and mark done once fully off-screen
+      if (this.x < -this.trailLen || this.y > H + this.trailLen) {
+        this.alpha -= 0.04;
+        if (this.alpha <= 0) this.done = true;
+      }
+    }
+
+    draw() {
+      if (this.alpha <= 0) return;
+
+      // Unit vector along travel direction for tail offset
+      const mag  = Math.hypot(this.vx, this.vy);
+      const ux   = this.vx / mag;
+      const uy   = this.vy / mag;
+      const tailX = this.x - ux * this.trailLen;
+      const tailY = this.y - uy * this.trailLen;
+
+      // ── Gradient tail: transparent at end → bright at head ──
+      const g = ctx.createLinearGradient(tailX, tailY, this.x, this.y);
+      g.addColorStop(0,   `rgba(255,255,255,0)`);
+      g.addColorStop(0.6, `rgba(210,200,255,${this.alpha * 0.45})`);
+      g.addColorStop(1,   `rgba(255,255,255,${this.alpha})`);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = this.r * 1.6;
+      ctx.lineCap     = 'round';
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(this.x, this.y);
+      ctx.stroke();
+      ctx.restore();
+
+      // ── Bright radial glow at the head ──────────────────────
+      const headG = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 5);
+      headG.addColorStop(0, `rgba(255,255,255,${this.alpha})`);
+      headG.addColorStop(1, `rgba(200,190,255,0)`);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 5, 0, Math.PI * 2);
+      ctx.fillStyle = headG;
+      ctx.fill();
+    }
+  }
+
+  // ── Particle arrays ────────────────────────────────────────
+  let stars         = [];
+  let nodes         = [];
+  let shootingStars = []; // active ShootingStar instances
+
+  /** Re-create all particle arrays (called on init and resize). */
+  function initParticles() {
+    stars         = Array.from({ length: STAR_COUNT }, () => new Star());
+    nodes         = Array.from({ length: NODE_COUNT  }, () => new Node());
+    shootingStars = [];
+  }
+
+  // ── Scroll star spawning ───────────────────────────────────
+  /**
+   * Spawn new stars at the leading viewport edge when scrolling,
+   * so the sky always appears fully populated in new sections.
+   * Stars fade in (fadeIn: 0→1) to avoid a jarring pop.
+   *
+   * @param {number} delta - scroll distance this event (signed, px)
+   */
+  function spawnScrollStars(delta) {
+    if (Math.abs(delta) < 2) return; // ignore micro-scroll jitter
+    const count  = Math.min(Math.ceil(Math.abs(delta) * 0.2), 8);
+    const edgeY  = delta > 0 ? H + 15 : -15; // bottom edge if scrolling down
+    for (let i = 0; i < count; i++) {
+      stars.push(new Star(edgeY + (Math.random() - 0.5) * 40));
+    }
+    // Trim array to avoid unbounded memory growth
+    if (stars.length > STAR_COUNT + 100) {
+      stars.splice(0, stars.length - STAR_COUNT);
+    }
+  }
+
+  // ── Draw constellation connections ─────────────────────────
+  /** O(n²) pair check — draw fading lines between nearby nodes. */
+  function drawConnections() {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a  = nodes[i];
+        const b  = nodes[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < MAX_CONN_DIST) {
+          // Alpha fades to 0 as distance approaches MAX_CONN_DIST
+          const alpha = (1 - d / MAX_CONN_DIST) * 0.22;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},${alpha})`;
+          ctx.lineWidth   = 0.7;
+          ctx.stroke();
+        }
       }
     }
   }
 
-  let stars = Array.from({ length: STAR_COUNT }, () => new Star());
+  // ── Cursor glow ────────────────────────────────────────────
+  /**
+   * Paint a dual-ring radial glow centred on the mouse.
+   * Inner ring (130px): bright purple at 9% opacity.
+   * Outer ring (340px): wider, dimmer halo at 3.5% opacity.
+   */
+  function drawCursorGlow() {
+    if (mouseX < 0 || mouseY < 0) return;
+    // Inner bright ring
+    const g1 = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 130);
+    g1.addColorStop(0, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0.09)`);
+    g1.addColorStop(1, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, W, H);
+    // Outer soft halo
+    const g2 = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 340);
+    g2.addColorStop(0, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0.035)`);
+    g2.addColorStop(1, `rgba(${ACCENT_R},${ACCENT_G},${ACCENT_B},0)`);
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, W, H);
+  }
 
+  // ── Click burst ────────────────────────────────────────────
+  /**
+   * On any click, repulse nearby constellation nodes outward
+   * with an impulse proportional to how close they are.
+   * Nodes spring back to their home positions naturally.
+   */
+  document.addEventListener('click', (e) => {
+    const cx = e.clientX;
+    const cy = e.clientY;
+    nodes.forEach(n => {
+      const dx = n.x - cx;
+      const dy = n.y - cy;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < REP_RAD && d > 0) {
+        const force = (REP_RAD - d) / REP_RAD;
+        n.vx += (dx / d) * REP_FORCE * force;
+        n.vy += (dy / d) * REP_FORCE * force;
+        // Clamp velocity so nodes don't fly off screen permanently
+        const spd = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+        if (spd > 8) { n.vx = (n.vx / spd) * 8; n.vy = (n.vy / spd) * 8; }
+      }
+    });
+  });
+
+  // ── Render loop ────────────────────────────────────────────
   let raf;
   let lastTs = 0;
 
   function render(ts) {
-    // Throttle to ~60fps
+    // Throttle to ~70 fps max
     if (ts - lastTs < 14) { raf = requestAnimationFrame(render); return; }
     lastTs = ts;
 
+    // ── Cursor velocity (drag effect) ────────────────────────
+    mVelX = mouseX - prevMX;
+    mVelY = mouseY - prevMY;
+    prevMX = mouseX;
+    prevMY = mouseY;
+
+    // ── Decay scrollDelta so parallax shift smoothly dies off ─
+    // Stars consume this value in their update(); leftover decays here.
+    scrollDelta *= 0.75;
+
     ctx.clearRect(0, 0, W, H);
 
-    // Decay scroll velocity so streaks fade naturally after scrolling stops
-    scrollVelY *= 0.85;
+    // ── 1. Cursor glow (painted first, below all particles) ───
+    drawCursorGlow();
 
+    // ── 2. Shooting stars — spawn on timer, then animate ──────
+    if (ts >= nextShootTime) {
+      shootingStars.push(new ShootingStar());
+      // Random gap between SHOOT_MIN_MS and SHOOT_MAX_MS
+      nextShootTime = ts + SHOOT_MIN_MS + Math.random() * (SHOOT_MAX_MS - SHOOT_MIN_MS);
+    }
+    // Remove finished shooting stars to avoid memory growth
+    shootingStars = shootingStars.filter(s => !s.done);
+    shootingStars.forEach(s => { s.update(); s.draw(); });
+
+    // ── 3. Background twinkling stars ─────────────────────────
     stars.forEach(s => { s.update(); s.draw(); });
+
+    // ── 4. Interactive constellation nodes + connections ───────
+    nodes.forEach(n => { n.update(); n.draw(); });
+    drawConnections();
 
     raf = requestAnimationFrame(render);
   }
 
-  // Pause when tab hidden
+  // Pause animation when tab is hidden to save CPU/GPU
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       raf = requestAnimationFrame(render);
@@ -840,6 +1285,8 @@ const isSmallScreen = window.innerWidth < 640;
     }
   });
 
+  // Bootstrap
+  resize();
   raf = requestAnimationFrame(render);
 })();
 
