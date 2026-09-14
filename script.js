@@ -1003,3 +1003,84 @@ const isSmallScreen = window.innerWidth < 640;
   }, 2200);
 })();
 
+// ════════════════════════════════════════════════════════════
+// 16. CREDENTIALS SLIDER
+// ════════════════════════════════════════════════════════════
+(function initCredentialsSlider() {
+  const slides = document.querySelectorAll('.cred-slide');
+  const dotsContainer = document.getElementById('slider-dots');
+  const prevBtn = document.getElementById('slider-prev');
+  const nextBtn = document.getElementById('slider-next');
+  
+  if (slides.length === 0) return;
+
+  let currentIndex = 0;
+  let autoSlideInterval;
+
+  // Create dots
+  slides.forEach((_, index) => {
+    const dot = document.createElement('div');
+    dot.classList.add('slider-dot');
+    if (index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+      goToSlide(index);
+      resetAutoSlide();
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.slider-dot');
+
+  function goToSlide(index) {
+    slides[currentIndex].classList.remove('active');
+    dots[currentIndex].classList.remove('active');
+    
+    currentIndex = (index + slides.length) % slides.length;
+    
+    slides[currentIndex].classList.add('active');
+    dots[currentIndex].classList.add('active');
+  }
+
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+
+  function prevSlide() {
+    goToSlide(currentIndex - 1);
+  }
+
+  // Event listeners for buttons
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      resetAutoSlide();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      resetAutoSlide();
+    });
+  }
+
+  // Auto sliding
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(nextSlide, 4000);
+  }
+
+  function resetAutoSlide() {
+    clearInterval(autoSlideInterval);
+    startAutoSlide();
+  }
+
+  // Pause on hover
+  const sliderWrap = document.querySelector('.creds-slider-wrap');
+  if (sliderWrap) {
+    sliderWrap.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+    sliderWrap.addEventListener('mouseleave', startAutoSlide);
+  }
+
+  startAutoSlide();
+})();
+
