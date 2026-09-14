@@ -1881,7 +1881,7 @@ section {
 .creds-slider-wrap {
   position: relative;
   width: 100%;
-  max-width: 600px; /* limits width for better presentation */
+  max-width: 1000px; /* Wider to accommodate 3 items */
   margin: 0 auto;
   padding: 0 40px; /* space for buttons */
 }
@@ -1896,25 +1896,32 @@ section {
   border: 1px solid var(--border);
 }
 
-.cred-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.creds-track {
+  display: flex;
   height: 100%;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cred-slide {
+  flex: 0 0 100%; /* Default to 1 per view for mobile */
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 16px;
+  opacity: 0.5; /* Dim inactive items */
+  transition: opacity 0.5s ease;
 }
 
 .cred-slide.active {
-  opacity: 1;
-  visibility: visible;
+  opacity: 1; /* Highlight active items */
+}
+
+@media (min-width: 768px) {
+  .cred-slide {
+    flex: 0 0 33.333%; /* 3 items per view on desktop */
+  }
 }
 
 .cred-slide a {

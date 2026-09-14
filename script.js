@@ -1004,49 +1004,67 @@ const isSmallScreen = window.innerWidth < 640;
 })();
 
 // ════════════════════════════════════════════════════════════
-// 16. CREDENTIALS SLIDER
+// 16. CREDENTIALS SLIDER (MULTI-ITEM)
 // ════════════════════════════════════════════════════════════
 (function initCredentialsSlider() {
+  const track = document.getElementById('creds-track');
   const slides = document.querySelectorAll('.cred-slide');
   const dotsContainer = document.getElementById('slider-dots');
   const prevBtn = document.getElementById('slider-prev');
   const nextBtn = document.getElementById('slider-next');
   
-  if (slides.length === 0) return;
+  if (!track || slides.length === 0) return;
 
-  let currentIndex = 0;
+  let currentGroup = 0;
   let autoSlideInterval;
+  let itemsPerView = window.innerWidth >= 768 ? 3 : 1;
+  let totalGroups = Math.ceil(slides.length / itemsPerView);
 
-  // Create dots
-  slides.forEach((_, index) => {
-    const dot = document.createElement('div');
-    dot.classList.add('slider-dot');
-    if (index === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-      goToSlide(index);
-      resetAutoSlide();
+  function initDots() {
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < totalGroups; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('slider-dot');
+      if (i === currentGroup) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        goToGroup(i);
+        resetAutoSlide();
+      });
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  function updateSlider() {
+    // Translate the track by full viewport percentages (-100% per group)
+    let translateX = currentGroup * 100;
+    track.style.transform = `translateX(-${translateX}%)`;
+    
+    // Update dots
+    const dots = document.querySelectorAll('.slider-dot');
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentGroup);
     });
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = document.querySelectorAll('.slider-dot');
-
-  function goToSlide(index) {
-    slides[currentIndex].classList.remove('active');
-    dots[currentIndex].classList.remove('active');
     
-    currentIndex = (index + slides.length) % slides.length;
-    
-    slides[currentIndex].classList.add('active');
-    dots[currentIndex].classList.add('active');
+    // Update active class on slides for dimming effect
+    slides.forEach((slide, index) => {
+      const isVisible = index >= currentGroup * itemsPerView && index < (currentGroup + 1) * itemsPerView;
+      slide.classList.toggle('active', isVisible);
+    });
+  }
+
+  function goToGroup(index) {
+    currentGroup = index;
+    if (currentGroup < 0) currentGroup = totalGroups - 1;
+    if (currentGroup >= totalGroups) currentGroup = 0;
+    updateSlider();
   }
 
   function nextSlide() {
-    goToSlide(currentIndex + 1);
+    goToGroup(currentGroup + 1);
   }
 
   function prevSlide() {
-    goToSlide(currentIndex - 1);
+    goToGroup(currentGroup - 1);
   }
 
   // Event listeners for buttons
@@ -1074,6 +1092,18 @@ const isSmallScreen = window.innerWidth < 640;
     startAutoSlide();
   }
 
+  // Handle Resize
+  window.addEventListener('resize', () => {
+    const newItemsPerView = window.innerWidth >= 768 ? 3 : 1;
+    if (newItemsPerView !== itemsPerView) {
+      itemsPerView = newItemsPerView;
+      totalGroups = Math.ceil(slides.length / itemsPerView);
+      currentGroup = 0;
+      initDots();
+      updateSlider();
+    }
+  });
+
   // Pause on hover
   const sliderWrap = document.querySelector('.creds-slider-wrap');
   if (sliderWrap) {
@@ -1081,6 +1111,8 @@ const isSmallScreen = window.innerWidth < 640;
     sliderWrap.addEventListener('mouseleave', startAutoSlide);
   }
 
+  initDots();
+  updateSlider();
   startAutoSlide();
 })();
 
