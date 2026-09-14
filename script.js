@@ -890,6 +890,55 @@ const isSmallScreen = window.innerWidth < 640;
 })();
 
 // ════════════════════════════════════════════════════════════
+// 15. TYPEWRITER ANIMATION — dynamic roles in hero section
+// ════════════════════════════════════════════════════════════
+(function initTypewriter() {
+  const twElement = document.getElementById('typewriter');
+  if (!twElement) return;
+
+  const roles = [
+    "Decision Scientist",
+    "Data Builder",
+    "Entrepreneur",
+    "Developer"
+  ];
+  
+  let roleIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typingSpeed = 100;
+
+  function type() {
+    const currentRole = roles[roleIndex];
+    
+    if (isDeleting) {
+      twElement.textContent = currentRole.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 50; // delete faster
+    } else {
+      twElement.textContent = currentRole.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 100;
+    }
+
+    // If word is fully typed
+    if (!isDeleting && charIndex === currentRole.length) {
+      typingSpeed = 2000; // pause at end
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      roleIndex = (roleIndex + 1) % roles.length;
+      typingSpeed = 400; // pause before typing new word
+    }
+
+    setTimeout(type, typingSpeed);
+  }
+
+  // Start typewriter after a short initial delay
+  setTimeout(type, 1500);
+})();
+
+// ════════════════════════════════════════════════════════════
 // 14. MOBILE TOUCH RIPPLE — sexy tap effect for touch screens
 // ════════════════════════════════════════════════════════════
 (function initTouchRipples() {

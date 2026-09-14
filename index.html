@@ -102,37 +102,81 @@
     <section id="hero" aria-label="Introduction">
       <canvas id="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-inner">
-        <div class="hero-status reveal-fade" data-delay="0">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span class="mono-label">Decision Scientist @ Mu Sigma &nbsp;·&nbsp; Bangalore, India</span>
+        <div class="hero-content">
+          <div class="hero-status reveal-fade" data-delay="0">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="mono-label">Decision Scientist @ Mu Sigma &nbsp;·&nbsp; Bangalore, India</span>
+          </div>
+          <h1 class="hero-headline reveal-fade" data-delay="1">
+            <span class="headline-line">Transforming data</span>
+            <span class="headline-line headline-accent">into intelligence</span>
+            <span class="headline-line">&amp; decisive action.</span>
+          </h1>
+          <div class="hero-typewriter reveal-fade" data-delay="2">
+            I am a <span class="typewriter-text" id="typewriter"></span><span class="typewriter-cursor">|</span>
+          </div>
+          <p class="hero-sub reveal-fade" data-delay="3">
+            Decision Scientist at <em>Mu Sigma</em> · SRM CS Graduate with First Distinction (9.5 CGPA).<br />
+            I engineer data systems, decision models, and scalable algorithms to solve complex real-world problems.
+          </p>
+          <div class="hero-ctas reveal-fade" data-delay="4">
+            <a href="#work" class="cta-primary btn-magnetic" aria-label="View my work">
+              View Work
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="https://drive.google.com/file/d/1prPu3m29_UzqBEoIsDIFliCF_-9teP5-/view?usp=sharing" target="_blank" rel="noopener" class="cta-secondary btn-magnetic" aria-label="Download CV (opens in new tab)">
+              Download CV
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v7M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="hero-meta reveal-fade" data-delay="5" aria-hidden="true">
+            <span class="mono-label">SRM IST (9.5 CGPA — First Distinction)</span>
+            <span class="meta-divider">·</span>
+            <span class="mono-label">Computer Science B.Tech</span>
+            <span class="meta-divider">·</span>
+            <span class="mono-label">Mu Sigma</span>
+          </div>
         </div>
-        <h1 class="hero-headline reveal-fade" data-delay="1">
-          <span class="headline-line">Transforming data</span>
-          <span class="headline-line headline-accent">into intelligence</span>
-          <span class="headline-line">&amp; decisive action.</span>
-        </h1>
-        <p class="hero-sub reveal-fade" data-delay="2">
-          Decision Scientist at <em>Mu Sigma</em> · SRM CS Graduate with First Distinction (9.5 CGPA).<br />
-          I engineer data systems, decision models, and scalable algorithms to solve complex real-world problems.
-        </p>
-        <div class="hero-ctas reveal-fade" data-delay="3">
-          <a href="#work" class="cta-primary btn-magnetic" aria-label="View my work">
-            View Work
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="https://drive.google.com/file/d/1prPu3m29_UzqBEoIsDIFliCF_-9teP5-/view?usp=sharing" target="_blank" rel="noopener" class="cta-secondary btn-magnetic" aria-label="Download CV (opens in new tab)">
-            Download CV
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v7M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-        <div class="hero-meta reveal-fade" data-delay="4" aria-hidden="true">
-          <span class="mono-label">SRM IST (9.5 CGPA — First Distinction)</span>
-          <span class="meta-divider">·</span>
-          <span class="mono-label">Computer Science B.Tech</span>
-          <span class="meta-divider">·</span>
-          <span class="mono-label">Mu Sigma Decision Scientist</span>
-          <span class="meta-divider">·</span>
-          <span class="mono-label">Bangalore</span>
+        
+        <div class="hero-visual reveal-fade" data-delay="2">
+          <div class="profile-wrapper">
+            <!-- Multi-layer ring system -->
+            <svg class="profile-ring ring-outer" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="ring-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#a79af9" stop-opacity="0.9"/>
+                  <stop offset="50%" stop-color="#7c6af7" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#4f93f9" stop-opacity="0.9"/>
+                </linearGradient>
+                <linearGradient id="ring-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#4f93f9" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="#a79af9" stop-opacity="0.2"/>
+                </linearGradient>
+                <linearGradient id="ring-grad-3" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f9a84f" stop-opacity="0.5"/>
+                  <stop offset="100%" stop-color="#7c6af7" stop-opacity="0.1"/>
+                </linearGradient>
+              </defs>
+              <!-- Outermost ring — dashed, slow spin -->
+              <circle cx="100" cy="100" r="94" fill="none" stroke="url(#ring-grad-1)" stroke-width="0.8"
+                stroke-dasharray="30 10 60 20" stroke-linecap="round"/>
+              <!-- Middle ring — solid arc, counter-spin -->
+              <circle cx="100" cy="100" r="83" fill="none" stroke="url(#ring-grad-2)" stroke-width="1.2"
+                stroke-dasharray="140 122" stroke-linecap="round"/>
+              <!-- Inner accent ring — fastest spin -->
+              <circle cx="100" cy="100" r="71" fill="none" stroke="url(#ring-grad-3)" stroke-width="0.7"
+                stroke-dasharray="20 60 5 30" stroke-linecap="round"/>
+            </svg>
+
+            <!-- Orbiting glow dots -->
+            <div class="orbit-track orbit-1"><span class="orbit-dot dot-purple"></span></div>
+            <div class="orbit-track orbit-2"><span class="orbit-dot dot-blue"></span></div>
+            <div class="orbit-track orbit-3"><span class="orbit-dot dot-amber"></span></div>
+
+            <div class="profile-img-container">
+              <img src="Certificates/20250628_085034.png" alt="Sidhansu Keshri" class="profile-img" />
+            </div>
+          </div>
         </div>
       </div>
       <a href="#work" class="hero-scroll-hint" aria-label="Scroll to work section">

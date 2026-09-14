@@ -540,8 +540,168 @@ section {
   margin: 0 auto;
   padding: 0 clamp(20px, 4vw, 48px);
   display: flex;
+  flex-direction: column-reverse; /* image on top on mobile */
+  gap: 40px;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .hero-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+  }
+}
+
+.hero-content {
+  display: flex;
   flex-direction: column;
   gap: 24px;
+  flex: 1;
+  max-width: 650px;
+}
+
+/* ── Typewriter ── */
+.hero-typewriter {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.typewriter-text {
+  color: var(--text-primary);
+  font-weight: 700;
+  background: linear-gradient(135deg, #a79af9 0%, #7c6af7 40%, #4f93f9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.typewriter-cursor {
+  color: var(--text-primary);
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Profile Image Visual ── */
+.hero-visual {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.profile-wrapper {
+  position: relative;
+  width: clamp(220px, 45vw, 360px);
+  height: clamp(220px, 45vw, 360px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: floatProfile 6s ease-in-out infinite;
+}
+
+@keyframes floatProfile {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+
+/* Multi-ring SVG — three rings at different radii */
+.profile-ring {
+  position: absolute;
+  inset: -20%;
+  width: 140%;
+  height: 140%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Each ring SVG circle gets its own animation */
+.profile-ring circle:nth-child(1) {
+  animation: spinRing 30s linear infinite;
+  transform-origin: 100px 100px;
+}
+.profile-ring circle:nth-child(2) {
+  animation: spinRing 20s linear infinite reverse;
+  transform-origin: 100px 100px;
+}
+.profile-ring circle:nth-child(3) {
+  animation: spinRing 12s linear infinite;
+  transform-origin: 100px 100px;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Orbiting glow dots ── */
+.orbit-track {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0; left: 0;
+  border-radius: 50%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.orbit-1 { animation: orbitSpin 8s linear infinite; }
+.orbit-2 { animation: orbitSpin 14s linear infinite reverse; }
+.orbit-3 { animation: orbitSpin 11s linear infinite 3s; }
+
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.orbit-dot {
+  position: absolute;
+  top: -6px;
+  left: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot-purple {
+  background: #a79af9;
+  box-shadow: 0 0 12px 4px rgba(167,154,249,0.8);
+}
+.dot-blue {
+  background: #4f93f9;
+  box-shadow: 0 0 12px 4px rgba(79,147,249,0.8);
+}
+.dot-amber {
+  background: #f9c74f;
+  box-shadow: 0 0 10px 3px rgba(249,199,79,0.7);
+}
+
+.profile-img-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 60px -10px rgba(124,106,247,0.5), 0 10px 40px rgba(0,0,0,0.5);
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transform: scale(1.02);
 }
 
 .hero-status {
